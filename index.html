@@ -1,0 +1,241 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .topnav {
+        overflow: hidden;
+        background-color: #333;
+        }
+
+        .topnav a {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+        }
+
+        .dropdown {
+        float: right;
+        overflow: hidden;
+        }
+
+        .dropdown .dropbtn {
+        font-size: 16px;  
+        border: none;
+        outline: none;
+        color: white;
+        padding: 14px 16px;
+        background-color: inherit;
+        font-family: inherit;
+        margin: 0;
+        }
+
+        .topnav a:hover, .dropdown:hover .dropbtn{
+        background-color: #ddd;
+        color: black;
+        }
+
+        .topnav a.active {
+        background-color: #afb8ba;
+        color: white;
+        }
+
+        .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        }
+
+        .dropdown-content a {
+        float: none;
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+        }
+
+      .dropdown-content a:hover {
+      background-color: #ddd;
+      }
+
+      .dropdown:hover .dropdown-content {
+      display: block;
+      }
+        </style>
+        </head>
+        <body>
+
+        <div class="topnav">
+        <a class="active" href="index.html">Telepresence</a>
+        <a href="systemlog.php">System Log</a>
+        <a href="Robotmanagement.html">Robot Management</a>
+        <div class="dropdown">
+          <button class="dropbtn">Your Current Device 
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a href="#">Julee</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+          </div>
+        </div> 
+        </div>
+        <link rel="stylesheet" type="text/css" href="styles.css"/>
+    </head>
+    <body>
+        <h4>Telepresence</h4>
+        <input id="user-access-token"
+            type="text"
+            placeholder="User access token"
+            style="margin-bottom:1em; width: 500px;"/>
+        <button id="initialize-call-agent" type="button">Initialize Call Agent</button>
+        <br>
+        <br>
+        <input id="callee-acs-user-id"
+            type="text"
+            placeholder="Enter callee's Azure Communication Services user identity in format: '8:acs:resourceId_userId'"
+            style="margin-bottom:1em; width: 500px; display: block;"/>
+        <button id="start-call-button" type="button" disabled="true">Start Call</button>
+        <button id="hangup-call-button" type="button" disabled="true">Hang up Call</button>
+        <button id="accept-call-button" type="button" disabled="true">Accept Call</button>
+        <button id="start-video-button" type="button" disabled="true">Start Video</button>
+        <button id="stop-video-button" type="button" disabled="true">Stop Video</button>
+        <br>
+        <br>
+        <div id="connectedLabel" style="color: #13bb13;" hidden>Call is connected!</div>
+        <br>
+        <div id="remoteVideosGallery" style="width: 40%;" hidden>Remote participants' video streams:</div>
+        <br>
+        <div id="localVideoContainer" style="width: 30%;" hidden>Local video stream:</div>
+
+        <div class="custom-select" style="width:200px;">
+            <select>
+              <option value="0">Goal Destination:</option>
+              <option value="1">Audi</option>
+              <option value="2">BMW</option>
+              <option value="3">Citroen</option>
+              <option value="4">Ford</option>
+              <option value="5">Honda</option>
+              <option value="6">Jaguar</option>
+              <option value="7">Land Rover</option>
+              <option value="8">Mercedes</option>
+              <option value="9">Mini</option>
+              <option value="10">Nissan</option>
+              <option value="11">Toyota</option>
+              <option value="12">Volvo</option>
+            </select>
+          </div>
+
+          <script>
+            var x, i, j, l, ll, selElmnt, a, b, c;
+            /*look for any elements with the class "custom-select":*/
+            x = document.getElementsByClassName("custom-select");
+            l = x.length;
+            for (i = 0; i < l; i++) {
+              selElmnt = x[i].getElementsByTagName("select")[0];
+              ll = selElmnt.length;
+              /*for each element, create a new DIV that will act as the selected item:*/
+              a = document.createElement("DIV");
+              a.setAttribute("class", "select-selected");
+              a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+              x[i].appendChild(a);
+              /*for each element, create a new DIV that will contain the option list:*/
+              b = document.createElement("DIV");
+              b.setAttribute("class", "select-items select-hide");
+              for (j = 1; j < ll; j++) {
+                /*for each option in the original select element,
+                create a new DIV that will act as an option item:*/
+                c = document.createElement("DIV");
+                c.innerHTML = selElmnt.options[j].innerHTML;
+                c.addEventListener("click", function(e) {
+                    /*when an item is clicked, update the original select box,
+                    and the selected item:*/
+                    var y, i, k, s, h, sl, yl;
+                    s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+                    sl = s.length;
+                    h = this.parentNode.previousSibling;
+                    for (i = 0; i < sl; i++) {
+                      if (s.options[i].innerHTML == this.innerHTML) {
+                        s.selectedIndex = i;
+                        h.innerHTML = this.innerHTML;
+                        y = this.parentNode.getElementsByClassName("same-as-selected");
+                        yl = y.length;
+                        for (k = 0; k < yl; k++) {
+                          y[k].removeAttribute("class");
+                        }
+                        this.setAttribute("class", "same-as-selected");
+                        break;
+                      }
+                    }
+                    h.click();
+                });
+                b.appendChild(c);
+              }
+              x[i].appendChild(b);
+              a.addEventListener("click", function(e) {
+                  /*when the select box is clicked, close any other select boxes,
+                  and open/close the current select box:*/
+                  e.stopPropagation();
+                  closeAllSelect(this);
+                  this.nextSibling.classList.toggle("select-hide");
+                  this.classList.toggle("select-arrow-active");
+                });
+            }
+            function closeAllSelect(elmnt) {
+              /*a function that will close all select boxes in the document,
+              except the current select box:*/
+              var x, y, i, xl, yl, arrNo = [];
+              x = document.getElementsByClassName("select-items");
+              y = document.getElementsByClassName("select-selected");
+              xl = x.length;
+              yl = y.length;
+              for (i = 0; i < yl; i++) {
+                if (elmnt == y[i]) {
+                  arrNo.push(i)
+                } else {
+                  y[i].classList.remove("select-arrow-active");
+                }
+              }
+              for (i = 0; i < xl; i++) {
+                if (arrNo.indexOf(i)) {
+                  x[i].classList.add("select-hide");
+                }
+              }
+            }
+            /*if the user clicks anywhere outside the select box,
+            then close all select boxes:*/
+            document.addEventListener("click", closeAllSelect);
+            </script>
+
+        <div class="directional-buttons">
+            <button id="forward-button" type="button" class="direction-button up">
+              <span class="visually-hidden">up</span>
+            </button>
+            <button id="left-button" type="button" class="direction-button left">
+              <span class="visually-hidden">left</span>
+            </button>
+            <button id="right-button" type="button" class="direction-button right">
+              <span class="visually-hidden">right</span>
+            </button>
+            <button id="backward-button" type="button" class="direction-button down">
+              <span class="visually-hidden">down</span>
+            </button>
+          </div>
+        <!-- points to the bundle generated from client.js -->
+        <script src="./bundle.js"></script>
+        <script src="./bundle2.js"></script>
+    </body>
+</html>
