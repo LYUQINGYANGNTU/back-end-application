@@ -14,19 +14,7 @@
     ,[Evidence]
     ,[Location]
 FROM [dbo].[VisionTable]";
-    $getResults= sqlsrv_query($conn, $tsql);
-    echo ("Reading data from table" . PHP_EOL);
-    if ($getResults == FALSE)
-        echo (sqlsrv_errors());
-    while ($row = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC)) {
-     echo ($row['IncidentType'] . " " . $row['Date']. " " . $row['Time']. " " . $row['Evidence']. " " . $row['Location']. PHP_EOL);
-    }
-    sqlsrv_free_stmt($getResults);
 
-    function get_table()
-    {
-
-    }
 ?>
 
 <!-- index.html -->
@@ -136,7 +124,24 @@ FROM [dbo].[VisionTable]";
               <th>Evidence</th>
               <th>Location</th>
             </tr>
-            
+            <?php 
+    $getResults= sqlsrv_query($conn, $tsql);
+    if ($getResults == FALSE)
+        echo (sqlsrv_errors());
+    while ($row = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC)) {
+      echo "<tr>\n";
+      echo "<td>" . $row['IncidentType'] . "</td>";
+      echo "<td>" . $row['Date'] ."</td>";
+      echo "<td>" . $row['Time'] ."</td>";
+      $image_type = $row["image/jpeg"]; 
+      $image = $row["Evidence"]; 
+      Header ("Content-type: $image_type");  
+      echo "<td>" . $image ."</td>";
+      echo "<td>" . $row['Location'] ."</td>";
+      echo "</tr>";
+    }
+    sqlsrv_free_stmt($getResults);
+            ?>
           </table>
         </div>
         
