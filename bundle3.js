@@ -33124,11 +33124,56 @@ document.getElementById('kiteflying').addEventListener('click',function(){
             }, // Number of seconds.
           responseTimeoutInSeconds: 30
         };
-        client.invokeDeviceMethod(deviceId, vision, function (err, result) {
+        client.invokeDeviceMethod(deviceId, announcementmode, function (err, result) {
           if (err) {
-              console.error('Failed to invoke method \'' + vision.methodName + '\': ' + err.message);
+              console.error('Failed to invoke method \'' + announcementmode.methodName + '\': ' + err.message);
           } else {
-              console.log('Response from ' + vision.methodName + ' on ' + deviceId + ':');
+              console.log('Response from ' + announcementmode.methodName + ' on ' + deviceId + ':');
+              console.log(JSON.stringify(result, null, 2));
+          }
+          });
+      }
+  })
+
+  document.getElementById('tourmode').addEventListener('click',function(){
+    // Get the checkbox
+    var checkBox = document.getElementById("tourmode");
+    // Get the output text
+    var text = document.getElementById("text");
+  
+    if (checkBox.checked == true){
+      // Call the direct method on your device using the defined parameters.
+      var tourmode = {
+        methodName: 'tourmode',
+          payload:
+          {
+              "tourswitch":'on'
+          }, // Number of seconds.
+        responseTimeoutInSeconds: 30
+      };
+      client.invokeDeviceMethod(deviceId, tourmode, function (err, result) {
+          if (err) {
+              console.error('Failed to invoke method \'' + tourmode.methodName + '\': ' + err.message);
+          } else {
+              console.log('Response from ' + tourmode.methodName + ' on ' + deviceId + ':');
+              console.log(JSON.stringify(result, null, 2));
+          }
+          });
+      } else {
+  
+        var tourmode = {
+          methodName: 'tourmode',
+            payload:
+            {
+                "tourswitch":'off'
+            }, // Number of seconds.
+          responseTimeoutInSeconds: 30
+        };
+        client.invokeDeviceMethod(deviceId, tourmode, function (err, result) {
+          if (err) {
+              console.error('Failed to invoke method \'' + tourmode.methodName + '\': ' + err.message);
+          } else {
+              console.log('Response from ' + tourmode.methodName + ' on ' + deviceId + ':');
               console.log(JSON.stringify(result, null, 2));
           }
           });
@@ -33158,6 +33203,27 @@ document.getElementById('kiteflying').addEventListener('click',function(){
       });
   })
 
+
+  document.getElementById('resumeautopilotbtn').addEventListener('click',function(){
+            
+    var resumeautopilot = {
+      methodName: 'resumeautopilot',
+        payload:
+        {
+          "resume": 'resume'
+        }, // Number of seconds.
+      responseTimeoutInSeconds: 30
+    };
+
+     client.invokeDeviceMethod(deviceId, resumeautopilot, function (err, result) {
+      if (err) {
+          console.error('Failed to invoke method \'' + resumeautopilot.methodName + '\': ' + err.message);
+      } else {
+          console.log('Response from ' + resumeautopilot.methodName + ' on ' + deviceId + ':');
+          console.log(JSON.stringify(result, null, 2));
+      }
+      });
+  })
 
   document.getElementById('pathconfirm').addEventListener('click',function(){
   
@@ -33205,7 +33271,7 @@ document.getElementById('kiteflying').addEventListener('click',function(){
       });
   })
 
-  document.getElementById('mySelect3').addEventListener('change',function(){
+  document.getElementById('mySelect3').addEventListener('click',function(){
   
     var x = document.getElementById("mySelect3").value;
     

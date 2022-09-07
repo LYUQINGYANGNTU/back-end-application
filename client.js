@@ -3,6 +3,8 @@
 const { CallClient, VideoStreamRenderer, LocalVideoStream } = require('@azure/communication-calling');
 const { AzureCommunicationTokenCredential } = require('@azure/communication-common');
 const { AzureLogger, setLogLevel } = require("@azure/logger");
+const { CommunicationIdentityClient } = require('@azure/communication-identity');
+
 
 // Set the log level and output
 setLogLevel('verbose');
@@ -30,6 +32,7 @@ let stopVideoButton = document.getElementById('stop-video-button');
 let connectedLabel = document.getElementById('connectedLabel');
 let remoteVideosGallery = document.getElementById('remoteVideosGallery');
 let localVideoContainer = document.getElementById('localVideoContainer');
+let remotecontrol = document.getElementById('remotecontrol');
 
 /**
  * Using the CallClient, initialize a CallAgent instance with a CommunicationUserCredential which will enable us to make outgoing calls and receive incoming calls. 
@@ -37,8 +40,28 @@ let localVideoContainer = document.getElementById('localVideoContainer');
  */
 initializeCallAgentButton.onclick = async () => {
     try {
+        // This code demonstrates how to fetch your connection string
+        // from an environment variable.
+        const connectionString = 'endpoint=https://robot.communication.azure.com/;accesskey=+HAf36r9qr4PFMtMRXBCPpak+XPLIJHWhporQX7wAoH2TOMSjFbS99DlnKbasWQZ4IGTFhxKyiKaJcUypGsGZQ==';
+
+        // Instantiate the identity client
+        const identityClient = new CommunicationIdentityClient(connectionString);      
+
+        let identityResponse = await identityClient.createUser();
+        console.log(`\nCreated an identity with ID: ${identityResponse.communicationUserId}`);
+
+        // Issue an access token with the "voip" scope for an identity
+        let tokenResponse = await identityClient.getToken(identityResponse, ["chat","voip"]);
+
+        // Get the token and its expiration date from the response
+        const { token, expiresOn } = tokenResponse;
+
+        // Print the expiration date and token to the screen
+        console.log(`\nIssued an access token with 'voip' scope that expires at ${expiresOn}:`);
+        console.log(token);
+
         const callClient = new CallClient(); 
-        tokenCredential = new AzureCommunicationTokenCredential(userAccessToken.value.trim());
+        tokenCredential = new AzureCommunicationTokenCredential(token);
         callAgent = await callClient.createCallAgent(tokenCredential)
         // Set up a camera device to use.
         deviceManager = await callClient.getDeviceManager();
@@ -74,7 +97,7 @@ startCallButton.onclick = async () => {
     try {
         const localVideoStream = await createLocalVideoStream();
         const videoOptions = localVideoStream ? { localVideoStreams: [localVideoStream] } : undefined;
-        call = callAgent.startCall([{ communicationUserId: calleeAcsUserId.value.trim() }], { videoOptions });
+        call = callAgent.startCall([{ communicationUserId: '8:acs:5695483f-da57-4fb7-b318-08b7d4913f12_00000013-98d4-fecc-28c5-593a0d003da2' }], { videoOptions });
         // Subscribe to the call's properties and events.
         subscribeToCall(call);
     } catch (error) {
@@ -322,6 +345,7 @@ displayLocalVideoStream = async () => {
         const view = await localVideoStreamRenderer.createView();
         localVideoContainer.hidden = false;
         localVideoContainer.appendChild(view.target);
+        document.getElementById("remotecontrol").style.display="";
     } catch (error) {
         console.error(error);
     } 
@@ -334,6 +358,7 @@ removeLocalVideoStream = async() => {
     try {
         localVideoStreamRenderer.dispose();
         localVideoContainer.hidden = true;
+        document.getElementById("remotecontrol").style.display="none";
     } catch (error) {
         console.error(error);
     } 
