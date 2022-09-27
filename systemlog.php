@@ -13,9 +13,7 @@
     ,[Time]
     ,[Evidence]
     ,[Location]
-FROM [dbo].[VisionTable]";
-
-?>
+FROM [dbo].[VisionTable]";?>
 
 <!-- index.html -->
 <!DOCTYPE html>
@@ -98,11 +96,11 @@ FROM [dbo].[VisionTable]";
         <body>
 
         <div class="topnav">
-        <a href="index.html">Telepresence</a>
-        <a class="active" href="systemlog.php">System Log</a>
-        <a href="Robotmanagement.html">Robot Management</a>
+        <a href="../index.html">Telepresence</a>
+        <a class="active" href="./php/systemlog.php">System Log</a>
+        <a href="../Robotmanagement.html">Robot Management</a>
         <div class="dropdown">
-          <button class="dropbtn">Your Current Device 
+          <button class="dropbtn">Active Robot: Julee 
             <i class="fa fa-caret-down"></i>
           </button>
           <div class="dropdown-content">
@@ -132,21 +130,15 @@ FROM [dbo].[VisionTable]";
       echo "<tr>\n";
       echo "<td>" . $row['IncidentType'] . "</td>";
       echo "<td>" . $row['Date'] ."</td>";
-      echo "<td>" . $row['Time'] ."</td>";
-      $image_type = $row["image/jpeg"]; 
-      $image = $row["Evidence"]; 
-      Header ("Content-type: $image_type");  
-      echo "<td>" . $image ."</td>";
+      echo "<td>" . $row['Time'] ."</td>";    
+      echo "<td>" . '<img src="data:image/jpg;base64,'.base64_encode($row['Evidence']).'" style="width:600px;height:400px;">' ."</td>";
       echo "<td>" . $row['Location'] ."</td>";
       echo "</tr>";
     }
-    sqlsrv_free_stmt($getResults);
-            ?>
+    sqlsrv_free_stmt($getResults);?>
           </table>
         </div>
         
-        <div style="position:relative; ">
-          <button class="button" id="refresh">Refresh</button>
-          </div>
+        
     </body>
 </html>

@@ -18,12 +18,14 @@ RUN echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
 #RUN source ~/.bashrc
 RUN pecl install sqlsrv-5.10.0
 RUN pecl install pdo_sqlsrv-5.10.0
+RUN docker-php-ext-enable sqlsrv pdo_sqlsrv
 RUN printf "; priority=20\nextension=sqlsrv.so\n" > /usr/local/lib/php/extensions/no-debug-non-zts-20210902/sqlsrv.ini
 RUN printf "; priority=30\nextension=pdo_sqlsrv.so\n" > /usr/local/lib/php/extensions/no-debug-non-zts-20210902/pdo_sqlsrv.ini
 #RUN rm /usr/local/etc/php/php.ini
 RUN echo -e 'extension=sqlsrv\nextension=pdo_sqlsrv'>/usr/local/etc/php/php.ini
 RUN apt-get -y update
 #RUN apt-get install php-common
+#RUN docker-php-ext-install
 #RUN phpenmod sqlsrv pdo_sqlsrv
 RUN curl -s https://deb.nodesource.com/setup_16.x | bash
 RUN apt-get install -y nodejs

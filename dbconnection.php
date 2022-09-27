@@ -14,11 +14,12 @@
     ,[Location]
 FROM [dbo].[VisionTable]";
     $getResults= sqlsrv_query($conn, $tsql);
-    echo ("Reading data from table" . PHP_EOL);
+    
     if ($getResults == FALSE)
         echo (sqlsrv_errors());
     while ($row = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC)) {
-     echo ($row['IncidentType'] . " " . $row['Date']. " " . $row['Time']. " " . $row['Evidence']. " " . $row['Location']. PHP_EOL);
+     header("Content-type: image/jpeg");
+     echo ($row['Evidence']);
     }
     sqlsrv_free_stmt($getResults);
 ?>
